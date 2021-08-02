@@ -89,9 +89,10 @@ library(vip)
 
 vip(xgb_model, num_features = 12, geom = "col", aesthetics = list(fill = "bisque1", size = 0.5, color = "mistyrose3")) + theme_bw()
 ```
+
 # Examining the feature characterstics (distribution, suggestions, flaws, etc...)
 
-## Amount tsh variable
+### Amount tsh variable
 
 ```{r}
 tanzania %>% ggplot(., aes(amount_tsh)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw()
@@ -99,7 +100,7 @@ tanzania %>% ggplot(., aes(amount_tsh)) + geom_boxplot(aes(fill = status_group))
 
 The variable amount_tsh is the original variable in the Tanzania water well data. The description of this variable reads "total static head (amount water available to waterpoint)" with no units of measurement specified. Either this variable can be dropped for a decrease in variance but hopefully improving the accuracy after using a new model or examining the box plot which shows that it is a reasonable variable to use afterall. If we keep the outliers, which XGBoost handles well, they can be used to show the differences between the three target groups. It adds up, function wells will indeed have more water avaialbe to waterpoint than any other two categories. Once again though, the argument for collapsing functional needs repair class and non functional class is once again maybe a purposeful suggestion to try out.
 
-## Literacry rate by region variable
+### Literacry rate by region variable
 
 ```{r}
 tanzania %>% ggplot(., aes(literacy_rate_by_region)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw()
@@ -107,7 +108,7 @@ tanzania %>% ggplot(., aes(literacy_rate_by_region)) + geom_boxplot(aes(fill = s
 
 According to the VIP plot, literacy rate by region is in 9/12th position for importance which is also evident by how the IQR ranges overlap for each target category. Once again collapsing FNR(functional needs repair) with non functional is once again proposed as an avenue to explore.
 
-## Perecent unemployed by region
+### Perecent unemployed by region
 
 ```{r}
 tanzania %>% ggplot(., aes(pct_unemployed_by_region)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw()
@@ -122,7 +123,7 @@ separation) and this is captured in the corresponding AUC statistic."
 
 The target variable does not separate well in this predictor. This variable could be further dropped from analysis which may improve the accuracy of the model.
 
-## Well strain variable
+### Well strain variable
 
 ```{r}
 tanzania %>% ggplot(., aes(well_strain)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw()
@@ -136,7 +137,7 @@ tanzania %>% select(c(status_group, well_strain)) %>% group_by(status_group) %>%
 
 100% overlap between functional and non functional groups.
 
-## Permit variable de-dummified
+### Permit variable de-dummified
 
 ```{r}
 #blogdown::insert_image_addin(permit.dis)
@@ -144,7 +145,7 @@ tanzania %>% select(c(status_group, well_strain)) %>% group_by(status_group) %>%
 
 From the density plot we can see that the permit variable distribution does not separate well between the target classes and probably the reason behind the dummy versions scoring 11th and last place on the importance graph.
 
-## Handpump groundwater shallow well
+### Handpump groundwater shallow well
 Visualize it.
 Talk about how it was feature engineered via pca.
 Talk about how much variance it captured.

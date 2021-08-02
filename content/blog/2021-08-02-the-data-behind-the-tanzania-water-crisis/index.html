@@ -1524,20 +1524,22 @@ description: Description for the page
 ## 359 0.05         2              0.7                5 0.4368181
 ## 360 0.05         2              0.5                5 0.4362433</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" width="672" />
-# Examining the feature characterstics (distribution, suggestions, flaws, etc…)</p>
-<div id="amount-tsh-variable" class="section level2">
-<h2>Amount tsh variable</h2>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="examining-the-feature-characterstics-distribution-suggestions-flaws-etc" class="section level1">
+<h1>Examining the feature characterstics (distribution, suggestions, flaws, etc…)</h1>
+<div id="amount-tsh-variable" class="section level3">
+<h3>Amount tsh variable</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>The variable amount_tsh is the original variable in the Tanzania water well data. The description of this variable reads “total static head (amount water available to waterpoint)” with no units of measurement specified. Either this variable can be dropped for a decrease in variance but hopefully improving the accuracy after using a new model or examining the box plot which shows that it is a reasonable variable to use afterall. If we keep the outliers, which XGBoost handles well, they can be used to show the differences between the three target groups. It adds up, function wells will indeed have more water avaialbe to waterpoint than any other two categories. Once again though, the argument for collapsing functional needs repair class and non functional class is once again maybe a purposeful suggestion to try out.</p>
 </div>
-<div id="literacry-rate-by-region-variable" class="section level2">
-<h2>Literacry rate by region variable</h2>
+<div id="literacry-rate-by-region-variable" class="section level3">
+<h3>Literacry rate by region variable</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>According to the VIP plot, literacy rate by region is in 9/12th position for importance which is also evident by how the IQR ranges overlap for each target category. Once again collapsing FNR(functional needs repair) with non functional is once again proposed as an avenue to explore.</p>
 </div>
-<div id="perecent-unemployed-by-region" class="section level2">
-<h2>Perecent unemployed by region</h2>
+<div id="perecent-unemployed-by-region" class="section level3">
+<h3>Perecent unemployed by region</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>According to VIP plot, this variable is 10/12th place for importance. There also seems to be a pattern for how importance is measured. Reading [“<a href="https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf" class="uri">https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf</a>”].</p>
 <p>“For classification problems, an area under the ROC curve (AUC) statistic can be used to quantify predictor importance.
@@ -1546,8 +1548,8 @@ separate the classes of Y, that is a clear indicator that x is an important pred
 separation) and this is captured in the corresponding AUC statistic.”</p>
 <p>The target variable does not separate well in this predictor. This variable could be further dropped from analysis which may improve the accuracy of the model.</p>
 </div>
-<div id="well-strain-variable" class="section level2">
-<h2>Well strain variable</h2>
+<div id="well-strain-variable" class="section level3">
+<h3>Well strain variable</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>This variable is 6/12th position on importance plot. I wonder if there is any difference in the IQR ranges between the different status groups?</p>
 <pre><code>## # A tibble: 3 x 2
@@ -1558,12 +1560,12 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 ## 3 non functional          0.0185</code></pre>
 <p>100% overlap between functional and non functional groups.</p>
 </div>
-<div id="permit-variable-de-dummified" class="section level2">
-<h2>Permit variable de-dummified</h2>
+<div id="permit-variable-de-dummified" class="section level3">
+<h3>Permit variable de-dummified</h3>
 <p>From the density plot we can see that the permit variable distribution does not separate well between the target classes and probably the reason behind the dummy versions scoring 11th and last place on the importance graph.</p>
 </div>
-<div id="handpump-groundwater-shallow-well" class="section level2">
-<h2>Handpump groundwater shallow well</h2>
+<div id="handpump-groundwater-shallow-well" class="section level3">
+<h3>Handpump groundwater shallow well</h3>
 <p>Visualize it.
 Talk about how it was feature engineered via pca.
 Talk about how much variance it captured.</p>
