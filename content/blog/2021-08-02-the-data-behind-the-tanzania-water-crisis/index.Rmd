@@ -143,9 +143,7 @@ tanzania %>% select(c(status_group, well_strain)) %>% group_by(status_group) %>%
 
 ### Permit variable de-dummified
 
-```{r}
-#blogdown::insert_image_addin(permit.dis)
-```
+![](images/permit.dist.png)
 
 From the density plot we can see that the permit variable distribution does not separate well between the target classes and probably the reason behind the dummy versions scoring 11th and last place on the importance graph.
 
