@@ -12,7 +12,7 @@ meta_img: images/image.png
 description: Description for the page
 ---
 
-Add an image suitable for the blog
+![](images/lions.jpg)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F, message = F)
