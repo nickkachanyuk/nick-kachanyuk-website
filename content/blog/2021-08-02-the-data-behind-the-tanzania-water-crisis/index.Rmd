@@ -1,0 +1,150 @@
+---
+title: The Data Behind the Tanzania Water Crisis
+author: Nick Kachanyuk
+date: '2021-08-02'
+slug: []
+categories:
+  - R
+tags:
+  - data science
+  - R
+meta_img: images/image.png
+description: Description for the page
+---
+
+Add an image suitable for the blog
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, message = F)
+```
+
+```{r}
+library(xgboost)
+library(caret)
+library(dplyr)
+library(DiagrammeR)
+library(tidyverse)
+```
+
+```{r}
+tanzania <- read_csv('final_train.csv') %>% select(-X1)
+
+tanzania$status_group <- as.factor(tanzania$status_group)
+```
+
+```{r}
+set.seed(510)
+indexes <- sample(1:nrow(tanzania), 0.75 * nrow(tanzania))
+train_data <- tanzania[indexes,]
+test_data <- tanzania[-indexes,]
+```
+
+```{r}
+load("xgb_model.Rdata")
+```
+
+# Confusion matrix
+
+```{r}
+confusionMatrix(predict(xgb_model, test_data),factor(test_data$status_group))
+```
+
+```{r}
+xgb_model
+```
+
+```{r}
+xgb_results <- xgb_model$results %>% arrange(desc(Kappa))
+
+xgb_results
+```
+
+```{r}
+xgb_model$bestTune
+```
+
+```{r}
+xgb_results2 <- xgb_results %>% select(c("eta", "max_depth", "colsample_bytree", "min_child_weight", "Kappa"))
+
+xgb_results2
+```
+
+```{r}
+xgb_results2$max_depth <- as.factor(xgb_results2$max_depth)
+levels(xgb_results2$max_depth) <- c("max_depth_2", "max_depth_4", "max_depth_6", "max_depth_8")
+
+xgb_results2$colsample_bytree <- as.factor(xgb_results2$colsample_bytree)
+
+ggplot(xgb_results2, aes(eta, Kappa)) + 
+  geom_point(aes(color = colsample_bytree, alpha = 0.75)) +
+  geom_jitter(aes(color = colsample_bytree)) + 
+  facet_wrap(max_depth~.) + 
+  theme_bw() + 
+  labs(title = "XGBoost Parameter Grid", caption = "gamma = c(0,5)\nmin_child_weight = 5") 
+  
+```
+
+```{r}
+library(vip)
+
+vip(xgb_model, num_features = 12, geom = "col", aesthetics = list(fill = "bisque1", size = 0.5, color = "mistyrose3")) + theme_bw()
+```
+# Examining the feature characterstics (distribution, suggestions, flaws, etc...)
+
+## Amount tsh variable
+
+```{r}
+tanzania %>% ggplot(., aes(amount_tsh)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw()
+```
+
+The variable amount_tsh is the original variable in the Tanzania water well data. The description of this variable reads "total static head (amount water available to waterpoint)" with no units of measurement specified. Either this variable can be dropped for a decrease in variance but hopefully improving the accuracy after using a new model or examining the box plot which shows that it is a reasonable variable to use afterall. If we keep the outliers, which XGBoost handles well, they can be used to show the differences between the three target groups. It adds up, function wells will indeed have more water avaialbe to waterpoint than any other two categories. Once again though, the argument for collapsing functional needs repair class and non functional class is once again maybe a purposeful suggestion to try out.
+
+## Literacry rate by region variable
+
+```{r}
+tanzania %>% ggplot(., aes(literacy_rate_by_region)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw()
+```
+
+According to the VIP plot, literacy rate by region is in 9/12th position for importance which is also evident by how the IQR ranges overlap for each target category. Once again collapsing FNR(functional needs repair) with non functional is once again proposed as an avenue to explore.
+
+## Perecent unemployed by region
+
+```{r}
+tanzania %>% ggplot(., aes(pct_unemployed_by_region)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw()
+```
+
+According to VIP plot, this variable is 10/12th place for importance. There also seems to be a pattern for how importance is measured. Reading ["https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf"]. 
+
+"For classification problems, an area under the ROC curve (AUC) statistic can be used to quantify predictor importance.
+The AUC statistic is computed by using the predictor x as input to the ROC curve. If x can reasonably
+separate the classes of Y, that is a clear indicator that x is an important predictor (in terms of class
+separation) and this is captured in the corresponding AUC statistic."
+
+The target variable does not separate well in this predictor. This variable could be further dropped from analysis which may improve the accuracy of the model.
+
+## Well strain variable
+
+```{r}
+tanzania %>% ggplot(., aes(well_strain)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw()
+```
+
+This variable is 6/12th position on importance plot. I wonder if there is any difference in the IQR ranges between the different status groups?
+
+```{r}
+tanzania %>% select(c(status_group, well_strain)) %>% group_by(status_group) %>% summarise(iqr = IQR(well_strain))
+```
+
+100% overlap between functional and non functional groups.
+
+## Permit variable de-dummified
+
+```{r}
+#blogdown::insert_image_addin(permit.dis)
+```
+
+From the density plot we can see that the permit variable distribution does not separate well between the target classes and probably the reason behind the dummy versions scoring 11th and last place on the importance graph.
+
+## Handpump groundwater shallow well
+Visualize it.
+Talk about how it was feature engineered via pca.
+Talk about how much variance it captured.
