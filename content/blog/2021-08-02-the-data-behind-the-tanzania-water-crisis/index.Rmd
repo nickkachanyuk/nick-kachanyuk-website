@@ -1,13 +1,12 @@
 ---
-title: The Data Behind the Tanzanian Water Crisis
-author: Nick Kachanyuk
+title: "The Data Behind the Tanzanian Water Crisis"
+author: "Nick Kachanyuk"
 date: '2021-08-02'
 slug: []
-categories:
-  - R
+categories: R
 tags:
-  - data science
-  - R
+- data science
+- R
 meta_img: images/image.png
 description: Description for the page
 ---
@@ -171,9 +170,9 @@ The model is classifies functional wells better than any other target class. It 
 
 The Kappa value of 0.599 shows that this is a good classifier after all and it seems like there is no apparent overfitting.
 
-# Examining the improtance of features in the model and feature characterstics (distribution, suggestions, flaws, etc...)
+## Examining the improtance of features in the model and feature characterstics (distribution, suggestions, flaws, etc...)
 
-## Feature importance
+### Feature importance
 
 ```{r}
 library(vip)
