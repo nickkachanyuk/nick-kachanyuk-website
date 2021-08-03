@@ -375,9 +375,9 @@ Let's look at the target variable distribution for this variable.
 tanzania %>% ggplot(., aes(small_med_NW_regions)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "small to medium sized, northern and western regions principal component")
 ```
 
-The FNR wells seem that they are mostly clustered in the northern and western regions of Tanzania. Looking at the functional well group we can see the two tails on the negative x-axis further supposrting the idea that functional wells tend to be located in southern and eastern regions of Tanzania rather than in the north and/or west.
+The FNR wells seem that they are mostly clustered in the northern and western regions of Tanzania. Looking at the functional well group we can see the two tails on the negative x-axis further supporting the idea that functional wells tend to be located in southern and eastern regions of Tanzania rather than in the north and/or west.
 
-Overall this variable is 3/12 most important variables.
+Overall this variable is placed third in the variable of importance plot.
 
 # Results of analysis
 	1) What machine learning algorithm approach is most effective at classifying a water well as either functional , need of repair, or non-functional?
