@@ -106,6 +106,12 @@ Class imbalance can be problematic for some classification problems because a mo
 
 Another possible approach is to collapse FNR class with either functional or non-functional category. This will result in only 2 factor levels for the target variable, decrease the gap in the class imbalance, and also impose a more general classification system. If a pump needs repair it is likely to become non-functional in the near future and I think it makes sense to have two classes that could be: functional pumps, and pumps that need to fixed. This becomes more evident as a discuss the final features and how well the three classes are distributed among them.
 
+## Too many features and dimensionality reduction
+
+The number of predictor variables originally present in the data set was 39 coming from "Pump it Up" data set and 9 additional variables were added from the 2012 Tanzanian census report for a total of 48 variables. That number quickly grew to 84 predictors after some of the categorical variables were converted to dummy variables to be used in the principal component analysis and machine learning algorithm.
+
+Having a large number of predictors (features) is problematic because it can lead to overfitting where the noise of the data is picked up by the machine learning algorithm. This can cause bad out of sample (test) performance of the algorithm on new data. It is also more difficult to explain a model that has many features and dimensionality reduction techniques like PCA help make the data more concise. Later in this blog I will mention how the variables from the principal component analysis were created and what they represent.
+
 # The model
 
 For this project I chose to focus on the XGBoost model. The data has several outliers which XGBoost handles well. XGBoost is also good for large sized datasets that other models take longer to process and is less prone to overfitting thus making it notorious for good model performance.
@@ -188,7 +194,7 @@ Let's examine each variable more closely now.
 
 ```{r}
 tanzania %>% ggplot(., aes(amount_tsh)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + 
-  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "")
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "amount tsh")
 ```
 
 The variable amount_tsh is the original variable in the Tanzania water well data. The description of this variable reads "total static head (amount water available to waterpoint)" with no units of measurement specified. Either this variable can be dropped for a decrease in variance but hopefully improving the accuracy after using a new model or examining the box plot which shows that it is a reasonable variable to use afterall. If we keep the outliers, which XGBoost handles well, they can be used to show the differences between the three target groups. It adds up, function wells will indeed have more water avaialbe to waterpoint than any other two categories. Once again though, the argument for collapsing functional needs repair class and non functional class is once again maybe a purposeful suggestion to try out.
@@ -197,7 +203,7 @@ The variable amount_tsh is the original variable in the Tanzania water well data
 
 ```{r}
 tanzania %>% ggplot(., aes(literacy_rate_by_region)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() +
-  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "")
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "literacy rate by region")
 ```
 
 According to the VIP plot, literacy rate by region is in 9/12th position for importance which is also evident by how the IQR ranges overlap for each target category. Once again collapsing FNR(functional needs repair) with non functional is once again proposed as an avenue to explore.
@@ -206,7 +212,7 @@ According to the VIP plot, literacy rate by region is in 9/12th position for imp
 
 ```{r}
 tanzania %>% ggplot(., aes(pct_unemployed_by_region)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() +
-  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "")
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "% unemployed by region")
 ```
 
 According to VIP plot, this variable is 10/12th place for importance. There also seems to be a pattern for how importance is measured. Reading ["https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf"]. 
@@ -222,7 +228,7 @@ The target variable does not separate well in this predictor. This variable coul
 
 ```{r}
 tanzania %>% ggplot(., aes(well_strain)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() +
-  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "")
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "well strain")
 ```
 
 This variable is 6/12th position on importance plot. Well strain is a variable that was feature engineered using the following formula:
@@ -248,6 +254,16 @@ tanzania %>% select(c(status_group, well_strain)) %>% group_by(status_group) %>%
 From the density plot we can see that the permit variable distribution does not separate well between the target classes and probably the reason behind the dummy versions scoring 11th and last place on the importance graph.
 
 ### Handpump groundwater shallow well
+
+Handpump_groundwater_shallow_well is the first feature engineered variable that was created via PCA. The distribution of the target variable classes within this variable is shown below.
+
+```{r}
+tanzania %>% ggplot(., aes(handpump_groundwater_shallow_wells)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() +
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "handpump groundwater shallow wells principal component")
+```
+
+
+
 Visualize it.
 Talk about how it was feature engineered via pca.
 Talk about how much variance it captured.
