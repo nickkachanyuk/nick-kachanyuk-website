@@ -13,7 +13,6 @@ description: Description for the page
 ---
 
 ![](images/lions.png){width=250px, height=500px}
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F, message = F)
 ```
@@ -25,6 +24,67 @@ library(dplyr)
 library(DiagrammeR)
 library(tidyverse)
 ```
+
+# Overview of this blog post
+
+According to Water.org[1], Tanzania is experiencing a water and sanitation crisis. According to their records 4 million people lack access to safe water resources. People often spend a significant amount of time traveling long distances to collect water, and this burden often falls on women and girls. Using the data provided for the Pump it Up competition by DrivenData[2] along with Tanzania's 2012 census report[3] we will go through the machine learning approach using XGBoost to create a model that can predict the whether a water well is functional, needs repair, or non-functional. In addition, we will explore the features that were used in the model. 
+
+## Background
+
+Earlier this year, DrivenData hosted an educational data science competition that requires a machine learning approach that helps identify Tanzania’s water pump functionality. The data provided for the competition contains variables that focus on the specific features of these water wells such as location of the well, construction year, record date, and quality of the water. Identifying the functionality of water wells in Tanzania is important in addressing the water crisis in Tanzania but there is a greater opportunity to explore additional socioeconomic factors that may show why a particular water shortage is occurring in each region of the country.
+
+## What is the problem?
+
+Tanzania is experiencing a water crisis where about 4 million people lack access to safe water resources. While there is data on both Tanzania’s water well quality and the 2012 census, there is no attempt to combine these resources to assess the overall water situation in the country. Solving the water crisis requires both a problem-specific approach (identifying functionality of the wells) and a broader analysis of how different regions in the country are affected. Although there is no clear cause and effect pattern, identifying which regions are doing well in relation to others may help develop preventative strategies for the future and can also shed light on the challenges that the citizens of this country are facing when trying to access safe drinking water.
+
+## Why is it important to solve?
+
+In 2016, Water.org found that Tanzania is eligible for what they call a “water credit solution” which allows for lending programs to households and water companies. My project attempts at providing practical guidelines in solving the water crisis by first addressing the functionality of the water wells for each region in the country. Combining socioeconomic data into the analysis may also help answer questions such as how the water crisis is persistent for a given region. Examining the socioeconomic differences between regions may help get at issues like, which regions are experiencing water access and quality issues the most.
+
+# The Data
+
+## Outcome variable in the model
+
+The dependent variable in the model is called status_group. This is a categorical variable that contains three classes functional, functional needs repair (FNR), and non-functional. Since this is a categorical variable, a supervised machine learning classification approach will be used. The best model will be selected via the highest Cohen's kappa score.
+
+Kappa is about how much better your model classifier is performing over the performance of a classifier that simply guesses at random according to the frequency of each class. Kappa takes on a range of values from -1 to 1.
+
+According [Landis, J.R.; Koch, G.G. (1977). “The measurement of observer agreement for categorical data”. Biometrics 33 (1): 159–174], Kappa scores can be categorized as follows: 
+less than 0.20 (not good)
+0.21 to 0.40 (fair)
+0.41 to 0.60 (pretty good)
+0.61 to 0.80 (great)
+greater than 0.80 (almost perfect)
+
+## What types of features were considered?
+
+The features and their descriptions from the Pump it Up data can be found here:
+[https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/]
+
+The features from the Tanzania 2012 census are:
+total_region_pop: total population for a given Tanzanian region
+households_per_region: number of households by region
+mhead_avg_household_size_per_region: average number of male head of household by region
+fhead_avg_household_size_per_region: average number of female head of household by region
+literacy_rate_by_region: percent of the literate population by region
+pct_unemployed_by_region: percent of the unemployed population by region
+region_area_sq_mi: area in square miles of a given region
+
+Before I get into the final model and results. I would like to briefly mention a few things about the data challenges.
+
+## Dealing with missing data
+
+Here is a plot of the missing data:
+
+![](images/missing_data.png){width=150px, height=500px}
+
+The data appears to not be missing at random because if we look at installer and funder variables, there is a 100% match in the rows where the data is missing. In addition, there were 4 regions in which all the observations had a zero value for amount_tsh variable. An imputation strategy is needed because we can not simply delete the rows where the data is missing because the data is not missing at random. I wont elaborate too much on this in this post, because it is a whole process of its own, but the code for this entire project can be found in my GitHub repo [].
+
+Looking at the missing values graph we can exclude variables like scheme_name, scheme_management, installer, and funder from further analysis. The wpt_name is a unique identifying name value for each observation and can also be excluded from the analysis.
+
+## Target variable: class imbalance or unnecessary classes present? 
+
+Class imbalance is an important topic to discuss when preparing data for predictive modeling. From the graph below we can see that the functional class is the most popular class in the target variable (status_group).
 
 ```{r}
 tanzania <- read_csv('final_train.csv') %>% select(-X1)
@@ -40,24 +100,39 @@ test_data <- tanzania[-indexes,]
 ```
 
 ```{r}
+tanzania %>% group_by(status_group) %>% dplyr::summarize(well_count = n())
+```
+
+Class imbalance can be problematic for some classification problems because a model can become 'fixed' on the most popular class (because it is most frequent in the data) and fail to learn as much about the smaller classes thus decreasing the accuracy in the predictions. A solid strategy is to upscale a less frequent class by generating more observations that resemble that class.
+
+Another possible approach is to collapse FNR class with either functional or non-functional category. This will result in only 2 factor levels for the target variable, decrease the gap in the class imbalance, and also impose a more general classification system. If a pump needs repair it is likely to become non-functional in the near future and I think it makes sense to have two classes that could be: functional pumps, and pumps that need to fixed. This becomes more evident as a discuss the final features and how well the three classes are distributed among them.
+
+# The model
+
+For this project I chose to focus on the XGBoost model. The data has several outliers which XGBoost handles well. XGBoost is also good for large sized datasets that other models take longer to process and is less prone to overfitting thus making it notorious for good model performance.
+
+On the other hand, XGBoost model is difficult to interpret when the tree plot has too many nodes (which was the case for my best performing model). It is also a bit more challenging to tune due to having many hyperparameters. 
+
+## Hyperparameter tuning
+
+XGBoost tree model has the following hyperparameters [https://www.hackerearth.com/practice/machine-learning/machine-learning-algorithms/beginners-tutorial-on-xgboost-parameter-tuning-r/tutorial/]:
+
+I selected what seemed to be most appropriate based on the defintions of those variable provided and also using cross-validation during the model tuning.
+
+Below are hyperparameter values of the best performing XGBoost model and also a visual representation of hyperparameter tune grid.
+
+```{r}
 load("xgb_model.Rdata")
 ```
 
-# Confusion matrix
-
-```{r}
-confusionMatrix(predict(xgb_model, test_data),factor(test_data$status_group))
-```
-
-```{r}
+```{r, results='hide'}
 xgb_model
 ```
 
 ```{r}
 xgb_results <- xgb_model$results %>% arrange(desc(Kappa))
-
-xgb_results
 ```
+
 
 ```{r}
 xgb_model$bestTune
@@ -65,8 +140,6 @@ xgb_model$bestTune
 
 ```{r}
 xgb_results2 <- xgb_results %>% select(c("eta", "max_depth", "colsample_bytree", "min_child_weight", "Kappa"))
-
-xgb_results2
 ```
 
 ```{r}
@@ -80,9 +153,27 @@ ggplot(xgb_results2, aes(eta, Kappa)) +
   geom_jitter(aes(color = colsample_bytree)) + 
   facet_wrap(max_depth~.) + 
   theme_bw() + 
-  labs(title = "XGBoost Parameter Grid", caption = "gamma = c(0,5)\nmin_child_weight = 5") 
+  labs(title = "XGBoost Hyperparameter Grid", caption = "gamma = c(0,5)\nmin_child_weight = 5") 
   
 ```
+
+It seems classifiers with higher values of max_depth perform better than more shallow tree classifiers, and the lower to intermediate eta values are a good combination as well.
+
+Next, let's examine the confusion matrix.
+
+## Confusion matrix
+
+```{r}
+confusionMatrix(predict(xgb_model, test_data),factor(test_data$status_group))
+```
+
+The model is classifies functional wells better than any other target class. It seems to struggle with classifying FNR wells and does a mediocre job at classifying non-functional wells. Collapsing FNR and non-functional class may seem like a good suggestion for further analysis considerations. 
+
+The Kappa value of 0.599 shows that this is a good classifier after all and it seems like there is no apparent overfitting.
+
+# Examining the improtance of features in the model and feature characterstics (distribution, suggestions, flaws, etc...)
+
+## Feature importance
 
 ```{r}
 library(vip)
@@ -90,7 +181,9 @@ library(vip)
 vip(xgb_model, num_features = 12, geom = "col", aesthetics = list(fill = "bisque1", size = 0.5, color = "mistyrose3")) + theme_bw() + xlab(label = "Feature name")
 ```
 
-# Examining the feature characterstics (distribution, suggestions, flaws, etc...)
+The top four most important variables in the model are all feature engineered variables that were created via PCA (principal component analysis). This is probably because they contain a good proportion of the variance in the data. Surprisingly the original categorical variable "permit" is the least predictive even though one might believe that wells that have a permit are more likely to be functional because they have undergone more inspection and compliance.
+
+Let's examine each variable more closely now.
 
 ### Amount tsh variable
 
@@ -133,7 +226,15 @@ tanzania %>% ggplot(., aes(well_strain)) + geom_boxplot(aes(fill = status_group)
   scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "")
 ```
 
-This variable is 6/12th position on importance plot. I wonder if there is any difference in the IQR ranges between the different status groups?
+This variable is 6/12th position on importance plot. Well strain is a variable that was feature engineered using the following formula:
+
+well_strain = (population/total_region_pop) * region_pop_density) 
+- where population is the number of people living around the well
+- total_region_pop is the total number of people living in a given region of Tanzania
+- region_pop_density is total_region_pop/region_area_sq_mi
+
+
+I wonder if there is any difference in the IQR ranges of the well strain variable between the different status groups?
 
 ```{r}
 tanzania %>% select(c(status_group, well_strain)) %>% group_by(status_group) %>% summarise(iqr = IQR(well_strain))
