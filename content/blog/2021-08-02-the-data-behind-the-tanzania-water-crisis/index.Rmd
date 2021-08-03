@@ -85,7 +85,7 @@ Looking at the missing values graph we can exclude variables like scheme_name, s
 
 Class imbalance is an important topic to discuss when preparing data for predictive modeling. From the graph below we can see that the functional class is the most popular class in the target variable (status_group).
 
-```{r}
+```{r, warning=FALSE}
 tanzania <- read_csv('final_train.csv') %>% select(-X1)
 
 tanzania$status_group <- as.factor(tanzania$status_group)
