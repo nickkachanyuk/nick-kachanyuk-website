@@ -151,8 +151,8 @@ region_area_sq_mi: area in square miles of a given region</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>The variable amount_tsh is the original variable in the Tanzania water well data. The description of this variable reads “total static head (amount water available to waterpoint)” with no units of measurement specified. Either this variable can be dropped for a decrease in variance but hopefully improving the accuracy after using a new model or examining the box plot which shows that it is a reasonable variable to use afterall. If we keep the outliers, which XGBoost handles well, they can be used to show the differences between the three target groups. It adds up, function wells will indeed have more water avaialbe to waterpoint than any other two categories. Once again though, the argument for collapsing functional needs repair class and non functional class is once again maybe a purposeful suggestion to try out.</p>
 </div>
-<div id="literacry-rate-by-region-variable" class="section level3">
-<h3>Literacry rate by region variable</h3>
+<div id="literacy-rate-by-region-variable" class="section level3">
+<h3>Literacy rate by region variable</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>According to the VIP plot, literacy rate by region is in 9/12th position for importance which is also evident by how the IQR ranges overlap for each target category. Once again collapsing FNR(functional needs repair) with non functional is once again proposed as an avenue to explore.</p>
 </div>
