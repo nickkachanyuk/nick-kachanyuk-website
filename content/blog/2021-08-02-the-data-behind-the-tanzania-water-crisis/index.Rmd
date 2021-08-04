@@ -88,7 +88,7 @@ Here is a plot of the missing data:
 
 ![](images/missing_data.png){width=150px, height=500px}
 
-The data appears to not be missing at random because if we look at installer and funder variables, there is a 100% match in the rows where the data is missing. In addition, there were 4 regions in which all the observations had a zero value for amount_tsh variable. An imputation strategy is needed because we can not simply delete the rows where the data is missing because the data is not missing at random. I will not elaborate too much on this in this post, because it is a whole process of its own, but the code for this entire project can be found in my GitHub repo [https://github.com/nickkachanyuk?tab=repositories].
+The data appears to not be missing at random because if we look at installer and funder variables, there is a 100% match in the rows where the data is missing. In addition, there were 4 regions in which all the observations had a zero value for amount_tsh variable. An imputation strategy is needed because we can not simply delete the rows where the data is missing because the data is not missing at random. I will not elaborate too much on this in this post, because it is a whole process of its own, but the code for this entire project can be found in my GitHub repository [https://github.com/nickkachanyuk/tanzania_project].
 
 Looking at the missing values graph we can exclude variables like scheme_name, scheme_management, installer, and funder from further analysis. The wpt_name is a unique identifying name value for each observation and can also be excluded from the analysis.
 
