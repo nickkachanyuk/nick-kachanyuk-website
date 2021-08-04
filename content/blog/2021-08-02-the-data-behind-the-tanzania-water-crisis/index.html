@@ -379,15 +379,40 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 </div>
 </div>
 </div>
-<div id="results-of-analysis" class="section level1">
-<h1>Results of analysis</h1>
-<pre><code>1) What machine learning algorithm approach is most effective at classifying a water well as either functional , need of repair, or non-functional?
-2) Is there a disproportionate access to water among the different regions of Tanzania?
-3) Which variables are important in predicting if a water well is functional, needs repair, or non-functional?</code></pre>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>Using XGBoost tree model, an algorithm that predicts the status of the well was created. The Kappa score for the test set was 0.599 indicating that XGBoost did a solid job in determining which wells were functional, needed repairs, or non-functional.</p>
+<p>The trained model includes 12 predictors. After exploring the predictors via data visualizations, there seems to be evidence that the 6 least important variables in the importance plot may be removed for future projects dealing with this data. The 6 least important variables are:</p>
 <ul>
-<li>How can these findings be used in the real-world</li>
+<li><p>dense_populated_wells</p></li>
+<li><p>sparsely_populated_wells</p></li>
+<li><p>literacy_rate_by_region</p></li>
+<li><p>pct_unemployed_by_region</p></li>
+<li><p>permit_yes</p></li>
+<li><p>permit_unknown</p></li>
+</ul>
+<p>Looking at the 6 remaining predictors, the following conclusions can be made:</p>
+<ul>
+<li><p>Functional and functional need repair wells usually do not rely on handpump extraction methods and/or these wells are usually not shallow wells.</p></li>
+<li><p>Functional wells tend to use “other” extraction methods and/or the water source for these wells comes from either rivers or lakes.</p></li>
+<li><p>Functional wells tend to have more people living around these wells.</p></li>
+<li><p>Non-functional wells tend to have less people living around these wells.</p></li>
+<li><p>In general, functional wells are more present in the southern and/or eastern parts of Tanzania.</p></li>
+<li><p>Functional need repair wells are more common in the northern and/or western parts of Tanzania, and non-functional wells also follow this pattern but to a lesser degree.</p></li>
+</ul>
+<div id="how-can-these-findings-be-used-in-the-real-world" class="section level3">
+<h3>How can these findings be used in the real-world</h3>
+<p>This project attempts to create an initial framework for dealing with water-shortage issues in Tanzania. One intervention strategy that may be useful is to continue monitoring the amount of water present at a given well (amount_tsh variable). For this variable to be useful in future predictions, the units of measurement would first need to be defined so that there are no errors during data collection. In addition, a threshold value would need to be set that can serve as indicator if a well is at risk for being non-functional. According to the data visualization for this variable, this threshold boundary is located somewhere among the outlier values for the amount_tsh variable.</p>
+<p>Well strain is also a measurement variable that can indicate functionality of a given well. The data visualization of this variable shows that non-functional wells have larger outliers for this variable than functional and FNR wells.</p>
+<p>Finally indicator variables created by PCA can help highlight the geographic and demographic differences that may exist between the three classes of wells, and characteristics of a given well are also useful indicators. Unfortunately due to missing data issues, it was difficult to address the differences between regions of Tanzania. This was because four regions of Tanzania had no observations for variables like amount_tsh. If addressing water quality by region is desired, then more accurate data collection is needed and is something that could be done for further analysis.</p>
+</div>
+<div id="future-project-direction" class="section level2">
+<h2>Future project direction</h2>
+<p>The following is a list of possible things to explore in the future for this project:</p>
+<ul>
+<li><p>Convert this from a multiclass to a binary classification problem to address class imbalance and lack of variance between FNR and non-functional classes.</p></li>
+<li><p>Address the water well functionality by regions. This requires for the data to be recollected (at least for the four regions where data is missing). The four regions are: Dodoma, Kagera, Mbeya, and Tabor</p></li>
+<li><p>Try a new model that includes only the top 6 predictors in the variable of importance plot.</p></li>
 </ul>
 </div>
-<div id="future-project-direction" class="section level1">
-<h1>Future project direction</h1>
 </div>
