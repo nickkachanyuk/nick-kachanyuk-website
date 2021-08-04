@@ -20,7 +20,7 @@ description: Description for the page
 <p>According to Water.org [1], Tanzania is experiencing a water and sanitation crisis. According to their records 4 million people lack access to safe water resources. People often spend a significant amount of time traveling long distances to collect water, and this burden often falls on women and girls. Using the data provided for the Pump it Up competition by DrivenData [2] along with Tanzania’s 2012 census report [3] we will go through the machine learning approach using XGBoost to create a model that can predict whether a water well is functional, needs repair, or non-functional. In addition, we will explore the features that were used in the model.</p>
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Earlier this year, DrivenData hosted an educational data science competition that requires a machine learning approach to identify water pump functionality in Tanzania. The data provided for the competition contains variables that focuses on the specific features of these water wells such as location of the well, construction year, record date, and quality of the water. Identifying the functionality of water wells in Tanzania is important in addressing the water crisis in Tanzania but there is a greater opportunity to explore additional factors that may show why a particular water shortage is occurring a given region of the country.</p>
+<p>Earlier this year, DrivenData hosted an educational data science competition that requires a machine learning approach to identify water pump functionality in Tanzania. The data provided for the competition contains variables that focus on the specific features of these water wells such as location of the well, construction year, record date, and quality of the water in the well. Identifying the functionality of water wells in Tanzania is important in addressing the water crisis in Tanzania but there is a greater opportunity to explore additional factors that may show why a particular water shortage is occurring in a given region of the country.</p>
 </div>
 <div id="what-is-the-problem" class="section level2">
 <h2>What is the problem?</h2>
@@ -156,7 +156,7 @@ description: Description for the page
 <div id="amount-tsh-variable" class="section level3">
 <h3>Amount tsh variable</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<p>The variable amount_tsh is the original variable in the Tanzania water well data. The description of this variable reads “total static head (amount water available to waterpoint)” with no units of measurement specified. Either this variable can be dropped for a decrease in variance but hopefully improving the accuracy after using a new model.</p>
+<p>The variable amount_tsh is the original variable in the Tanzania water well data. The description of this variable reads “total static head (amount water available to waterpoint)” with no units of measurement specified.</p>
 <p>Examining the box plot shows that it is a reasonable variable to use after-all though. If we keep the outliers, which XGBoost handles well, they can be used to show the difference between the three target groups. It adds up, functional wells will indeed have more water available to waterpoint than any other two categories. Once again though, the argument for collapsing functional needs repair class and non functional class maybe a purposeful suggestion to try out in future analysis.</p>
 </div>
 <div id="literacy-rate-by-region-variable" class="section level3">
@@ -191,7 +191,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 ## 1 functional              0.0185
 ## 2 functional needs repair 0.0144
 ## 3 non functional          0.0185</code></pre>
-<p>100% overlap between functional and non functional groups.</p>
+<p>There is indeed 100% overlap between functional and non functional groups in their IQR. That’s not too informative but if we look at the outliers we can see that for non-functional class there is a greater range than for functional and FNR classes. My understanding is that these outliers were useful in separating the target classes for this variable, which is not ideal because outliers are just few observations in the data and usually are not representative of the general pattern.</p>
 </div>
 <div id="permit-variable-de-dummified" class="section level3">
 <h3>Permit variable de-dummified</h3>
@@ -202,7 +202,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 <h3>Handpump groundwater shallow well principal component variable</h3>
 <p>Handpump_groundwater_shallow_well is a feature engineered variable that was created via PCA. The distribution of the target variable classes within this variable is shown below.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-<p>The density plot shows that there isn’t much separation of the target variable classes within this principal component but the distributions are not exact matches. This variable is the 4th most important variable according to the variable importance plot yet it seems to show similar distribution patterns of the target variable in the same way the other less important features are doing. One explanation for this is that since this is a principal component variable, it captures more variance in the data than a regular variable would.</p>
+<p>The density plot shows that there isn’t much separation of the target variable classes within this principal component but the distributions are not exact matches. This variable is the 4th most important variable according to the variable importance plot yet it seems to show similar distribution patterns of the target variable in the same way the other less important features are doing. One explanation for this is that since this is a principal component variable, it captures more variance in the data than other variables in the data set would.</p>
 <p>Let’s briefly explore how this variable was created via PCA.</p>
 <div id="pca-process" class="section level4">
 <h4>PCA process</h4>
@@ -243,7 +243,8 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 ## 14 -0.09686690 -0.17848770
 ## 15  0.32896234 -0.04411451
 ## 16 -0.32216130  0.31381435</code></pre>
-<p>We can see that the variables extraction_type_class_handpump, source_class_groundwater, and source_type_shallow well have the largest positive values for principal component 1. Here it makes sense to rename this principal component to something like handpump_groundwater_shallow_wells principal component. Looking at the density plot above we can see how the observations(rows) of the data are distributed for this principal component and also how the target variable classes are distributed. It seems that functional and FNR wells are distributed towards more negative loading values (with some exceptions) indicating that these wells usually do not rely on handpump extraction methods from shallow wells. Whereas non-functional wells seem to be distributed towards more positive loading values indicating that these wells tend to rely on handpump extraction from shallow and/or groundwater wells.</p>
+<p>We can see that the variables extraction_type_class_handpump, source_class_groundwater, and source_type_shallow well have the largest positive values for principal component 1. Here it makes sense to rename this principal component to something like handpump_groundwater_shallow_wells principal component.</p>
+<p>Looking at the density plot above we can see how the observations(rows) of the data are distributed for this principal component and also how the target variable classes are distributed. It seems that functional and FNR wells are distributed towards more negative loading values (with some exceptions) indicating that these wells usually do not rely on handpump extraction methods from shallow wells. Whereas non-functional wells seem to be distributed towards more positive loading values indicating that these wells tend to rely on handpump extraction from shallow and/or groundwater wells.</p>
 </div>
 </div>
 <div id="other-extraction-from-rivers-and-lakes-principal-component-variable" class="section level3">
@@ -328,7 +329,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 ## 5 -0.13860836
 ## 6 -0.86225238</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
-<p>Once again there is a lot of overlap between the different target classes in the distribution for this variable. It seems that to some degree the non-functional wells tend to have slightly more sparsely populated wells than functional and FNR wells.</p>
+<p>Once again there is a lot of overlap between the different target classes in the distribution for this variable. It seems that to some degree the functional wells tend to have slightly more sparsely populated wells than functional and FNR wells.</p>
 <p>It is also no surprise that this variable placed 8/12 on variable of importance plot which suggests that this variable can possibly be removed from further analysis in the future.</p>
 </div>
 <div id="medium-to-large-sized-southern-and-eastern-regions-principal-component-variable" class="section level3">
@@ -370,7 +371,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 ## 11  region_Kilimanjaro -0.04818027 -0.37948085  0.060506902 -0.12153959
 ## 12        region_Mbeya  0.07990353  0.19458539  0.008310275 -0.26606545
 ## 13     region_Morogoro  0.16192694  0.06070716 -0.109406661  0.25655965</code></pre>
-<p>Negative longitudinal values indicate that this principal component is more about the western regions of Tanzania. The latitudinal values are slightly less negative values than in PC1 which indicates that that PC2 is more about northern regions of Tanzania. Also, region area value is also slightly less positive than PC1, indicating that the regions that load well onto PC2 are small to medium sized.</p>
+<p>Negative longitudinal values indicate that this principal component is more about the western regions of Tanzania. The latitudinal values are slightly less negative values than in PC1 which indicates that that PC2 is more about northern regions of Tanzania. Also, region area value is slightly less positive than PC1, indicating that the regions that load well onto PC2 are small to medium sized.</p>
 <p>Let’s look at the target variable distribution for this variable.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <p>The FNR wells seem to be mostly clustered in the northern and western regions of Tanzania. Looking at the functional well group, we can see the two tails on the negative x-axis further support the idea that functional wells tend to be located in southern and eastern regions of Tanzania rather than in the north and/or west.</p>
@@ -394,8 +395,6 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 <ul>
 <li><p>Functional and functional need repair wells usually do not rely on handpump extraction methods and/or these wells are usually not shallow wells.</p></li>
 <li><p>Functional wells tend to use “other” extraction methods and/or the water source for these wells comes from either rivers or lakes.</p></li>
-<li><p>Functional wells tend to have more people living around these wells.</p></li>
-<li><p>Non-functional wells tend to have less people living around these wells.</p></li>
 <li><p>In general, functional wells are more present in the southern and/or eastern parts of Tanzania.</p></li>
 <li><p>Functional need repair wells are more common in the northern and/or western parts of Tanzania, and non-functional wells also follow this pattern but to a lesser degree.</p></li>
 </ul>
@@ -403,7 +402,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 <h3>How can these findings be used in the real-world</h3>
 <p>This project attempts to create an initial framework for dealing with water-shortage issues in Tanzania. One intervention strategy that may be useful is to continue monitoring the amount of water present at a given well (amount_tsh variable). For this variable to be useful in future predictions, the units of measurement would first need to be defined so that there are no errors during data collection. In addition, a threshold value would need to be set that can serve as indicator if a well is at risk for being non-functional. According to the data visualization for this variable, this threshold boundary is located somewhere among the outlier values for the amount_tsh variable.</p>
 <p>Well strain is also a measurement variable that can indicate functionality of a given well. The data visualization of this variable shows that non-functional wells have larger outliers for this variable than functional and FNR wells.</p>
-<p>Finally indicator variables created by PCA can help highlight the geographic and demographic differences that may exist between the three classes of wells, and characteristics of a given well are also useful indicators. Unfortunately due to missing data issues, it was difficult to address the differences between regions of Tanzania. This was because four regions of Tanzania had no observations for variables like amount_tsh. If addressing water quality by region is desired, then more accurate data collection is needed and is something that could be done for further analysis.</p>
+<p>Finally indicator variables created by PCA can help highlight the geographic and demographic differences that may exist between the three classes of wells, and characteristics of a given well are also useful indicators. Unfortunately due to missing data issues, it was difficult to address the differences between regions of Tanzania. This was because four regions of Tanzania had no valid observations for variables like amount_tsh. If addressing water quality by region is desired, then more accurate data collection is needed and is something that could be done for further analysis.</p>
 </div>
 <div id="future-project-direction" class="section level2">
 <h2>Future project direction</h2>
