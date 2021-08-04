@@ -157,12 +157,12 @@ description: Description for the page
 <h3>Amount tsh variable</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>The variable amount_tsh is the original variable in the Tanzania water well data. The description of this variable reads “total static head (amount water available to waterpoint)” with no units of measurement specified.</p>
-<p>Examining the box plot shows that it is a reasonable variable to use after-all though. If we keep the outliers, which XGBoost handles well, they can be used to show the difference between the three target groups. It adds up, functional wells will indeed have more water available to waterpoint than any other two categories. Once again though, the argument for collapsing functional needs repair class and non functional class maybe a purposeful suggestion to try out in future analysis.</p>
+<p>Examining the box plot shows that it is a reasonable variable to use after-all though. If we keep the outliers, which XGBoost handles well, they can be used to show the difference between the three target groups. It adds up, functional wells will indeed have more water available to waterpoint than any other two categories. Once again though, the argument for collapsing functional needs repair class and non-functional class maybe a purposeful suggestion to try out in future analysis.</p>
 </div>
 <div id="literacy-rate-by-region-variable" class="section level3">
 <h3>Literacy rate by region variable</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<p>According to the VIP plot, literacy rate by region is in 9/12th position for importance which is also evident by how the IQR ranges overlap for each target category. Once again collapsing FNR(functional needs repair) with non functional is recommended as an avenue to explore.</p>
+<p>According to the VIP plot, literacy rate by region is in 9/12th position for importance which is also evident by how the IQR ranges overlap for each target category. Once again collapsing FNR(functional needs repair) with non-functional is recommended as an avenue to explore.</p>
 </div>
 <div id="perecent-unemployed-by-region" class="section level3">
 <h3>Perecent unemployed by region</h3>
@@ -191,7 +191,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 ## 1 functional              0.0185
 ## 2 functional needs repair 0.0144
 ## 3 non functional          0.0185</code></pre>
-<p>There is indeed 100% overlap between functional and non functional groups in their IQR. That’s not too informative but if we look at the outliers we can see that for non-functional class there is a greater range than for functional and FNR classes. My understanding is that these outliers were useful in separating the target classes for this variable, which is not ideal because outliers are just few observations in the data and usually are not representative of the general pattern.</p>
+<p>There is indeed 100% overlap between functional and non-functional groups in their IQR. That’s not too informative but if we look at the outliers we can see that for non-functional class there is a greater range than for functional and FNR classes. My understanding is that these outliers were useful in separating the target classes for this variable, which is not ideal because outliers are just few observations in the data and usually are not representative of the general pattern.</p>
 </div>
 <div id="permit-variable-de-dummified" class="section level3">
 <h3>Permit variable de-dummified</h3>
@@ -252,7 +252,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 <p>Other_extraction_from_rivers_lakes is another feature engineered variable that was created via PCA. The distribution of the target variable classes within this variable is shown below.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <p>This principal component was created using the same variables and process used to create the handpump groundwater shallow well principal component variable.</p>
-<p>Again there is not much separation in the distribution of the status group classes. It seems that functional wells are more likely to be negatively correlated with this principal component than FNR and non-functional wells.</p>
+<p>Again, there is not much separation in the distribution of the status group classes. It seems that functional wells are more likely to be negatively correlated with this principal component than FNR and non-functional wells.</p>
 <p>The table below again shows how this principal component (PC2) was conceptualized.</p>
 <pre><code>##                                     rowname          PC1          PC2
 ## 1             extraction_type_class_gravity -0.342751850 -0.185647268
@@ -309,7 +309,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 ## 6 -0.86225238</code></pre>
 <p>The dense populated wells is represented as PC1 in the table above. Let’s examine how the target variable is distributed for this variable.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
-<p>A lot of overlap for this variable and is probably the reason why it placed 7/12 on the variable importance graph. Interestingly enough functional wells tend to be located in more dense populated areas than FNR and non-functional wells although this difference is not too great. In my opinion, it may be possible to complete further studies without this variable being included.</p>
+<p>A lot of overlap for this variable and is probably the reason why it placed 7/12 on the variable importance graph. Interestingly enough functional wells tend to be located in more densely populated areas than FNR and non-functional wells although this difference is not too great. In my opinion, it may be possible to complete further studies without this variable being included.</p>
 </div>
 <div id="sparsely-populated-wells-principal-component-variable" class="section level3">
 <h3>Sparsely populated wells principal component variable</h3>
@@ -375,7 +375,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 <p>Let’s look at the target variable distribution for this variable.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <p>The FNR wells seem to be mostly clustered in the northern and western regions of Tanzania. Looking at the functional well group, we can see the two tails on the negative x-axis further support the idea that functional wells tend to be located in southern and eastern regions of Tanzania rather than in the north and/or west.</p>
-<p>Overall this variable is placed third in the variable of importance plot.</p>
+<p>Overall, this variable is placed third in the variable of importance plot.</p>
 </div>
 </div>
 </div>
@@ -404,7 +404,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 <h3>How can these findings be used in the real-world</h3>
 <p>This project attempts to create an initial framework for dealing with water-shortage issues in Tanzania. One intervention strategy that may be useful is to continue monitoring the amount of water present at a given well (amount_tsh variable). For this variable to be useful in future predictions, the units of measurement would first need to be defined so that there are no errors during data collection. In addition, a threshold value would need to be set that can serve as indicator if a well is at risk for being non-functional. According to the data visualization for this variable, this threshold boundary is located somewhere among the outlier values for the amount_tsh variable.</p>
 <p>Well strain is also a measurement variable that can indicate functionality of a given well. The data visualization of this variable shows that non-functional wells have larger outliers for this variable than functional and FNR wells.</p>
-<p>Finally indicator variables created by PCA can help highlight the geographic and demographic differences that may exist between the three classes of wells, and characteristics of a given well are also useful indicators. Unfortunately due to missing data issues, it was difficult to address the differences between regions of Tanzania. This was because four regions of Tanzania had no valid observations for variables like amount_tsh. If addressing water quality by region is desired, then more accurate data collection is needed and is something that could be done for further analysis.</p>
+<p>Finally, indicator variables created by PCA can help highlight the geographic and demographic differences that may exist between the three classes of wells, and characteristics of a given well are also useful indicators. Unfortunately, due to missing data issues, it was difficult to address the differences between regions of Tanzania. This was because four regions of Tanzania had no valid observations for variables like amount_tsh. If addressing water quality by region is desired, then more accurate data collection is needed and is something that could be done for further analysis.</p>
 </div>
 <div id="future-project-direction" class="section level2">
 <h2>Future project direction</h2>
