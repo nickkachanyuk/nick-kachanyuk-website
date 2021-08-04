@@ -17,7 +17,7 @@ description: Description for the page
 <p><img src="images/lions.png" height="500" /></p>
 <div id="overview-of-this-blog-post" class="section level1">
 <h1>Overview of this blog post</h1>
-<p>According to Water.org[1], Tanzania is experiencing a water and sanitation crisis. According to their records 4 million people lack access to safe water resources. People often spend a significant amount of time traveling long distances to collect water, and this burden often falls on women and girls. Using the data provided for the Pump it Up competition by DrivenData[2] along with Tanzania’s 2012 census report[3] we will go through the machine learning approach using XGBoost to create a model that can predict whether a water well is functional, needs repair, or non-functional. In addition, we will explore the features that were used in the model.</p>
+<p>According to Water.org [1], Tanzania is experiencing a water and sanitation crisis. According to their records 4 million people lack access to safe water resources. People often spend a significant amount of time traveling long distances to collect water, and this burden often falls on women and girls. Using the data provided for the Pump it Up competition by DrivenData [2] along with Tanzania’s 2012 census report [3] we will go through the machine learning approach using XGBoost to create a model that can predict whether a water well is functional, needs repair, or non-functional. In addition, we will explore the features that were used in the model.</p>
 <div id="background" class="section level2">
 <h2>Background</h2>
 <p>Earlier this year, DrivenData hosted an educational data science competition that requires a machine learning approach to identify water pump functionality in Tanzania. The data provided for the competition contains variables that focuses on the specific features of these water wells such as location of the well, construction year, record date, and quality of the water. Identifying the functionality of water wells in Tanzania is important in addressing the water crisis in Tanzania but there is a greater opportunity to explore additional factors that may show why a particular water shortage is occurring a given region of the country.</p>
@@ -37,7 +37,7 @@ description: Description for the page
 <h2>Outcome variable in the model</h2>
 <p>The dependent variable in the model is called status_group. This is a categorical variable that contains three classes: functional, functional needs repair (FNR), and non-functional. Since this is a categorical variable, a supervised machine learning classification approach will be used. The best model will be selected via the highest Cohen’s kappa score.</p>
 <p>Kappa is about how much better your model classifier is performing over the performance of a classifier that simply guesses at random according to the frequency of each class. Kappa takes on a range of values from -1 to 1.</p>
-<p>According [Landis, J.R.; Koch, G.G. (1977). “The measurement of observer agreement for categorical data”. Biometrics 33 (1): 159–174], Kappa scores can be categorized as follows:</p>
+<p>According to [4], Kappa scores can be categorized as follows:</p>
 <ul>
 <li><p>less than 0.20 (not good)</p></li>
 <li><p>0.21 to 0.40 (fair)</p></li>
@@ -48,8 +48,7 @@ description: Description for the page
 </div>
 <div id="what-types-of-features-were-considered" class="section level2">
 <h2>What types of features were considered?</h2>
-<p>The features and their descriptions from the Pump it Up data can be found here:
-[<a href="https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/" class="uri">https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/</a>]</p>
+<p>The features and their descriptions from the Pump it Up data can be found here: [<a href="https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/" class="uri">https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/</a>]</p>
 <p>The features from the Tanzania 2012 census are:</p>
 <ul>
 <li><p>total_region_pop: total population for a given Tanzanian region</p></li>
@@ -93,7 +92,7 @@ description: Description for the page
 <p>On the other hand, XGBoost model is difficult to interpret when the tree plot has too many nodes (which was the case for my best performing model). It is also a bit more challenging to tune due to having many hyperparameters.</p>
 <div id="hyperparameter-tuning" class="section level2">
 <h2>Hyperparameter tuning</h2>
-<p>XGBoost tree model has the following hyperparameters [<a href="https://www.hackerearth.com/practice/machine-learning/machine-learning-algorithms/beginners-tutorial-on-xgboost-parameter-tuning-r/tutorial/" class="uri">https://www.hackerearth.com/practice/machine-learning/machine-learning-algorithms/beginners-tutorial-on-xgboost-parameter-tuning-r/tutorial/</a>]:</p>
+<p>XGBoost tree model has the following hyperparameters [5]:</p>
 <p>I selected what seemed to be most appropriate hyperparameter range values based on the definitions of the hyperparameters and also using cross-validation during the model tuning.</p>
 <p>Below are hyperparameter values of the best performing XGBoost model and also a visual representation of hyperparameter tune grid.</p>
 <pre><code>##    nrounds max_depth  eta gamma colsample_bytree min_child_weight subsample
@@ -168,7 +167,7 @@ description: Description for the page
 <div id="perecent-unemployed-by-region" class="section level3">
 <h3>Perecent unemployed by region</h3>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<p>According to VIP plot, this variable is 10/12th place for importance. There also seems to be a pattern for how importance is measured. Reading [“<a href="https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf" class="uri">https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf</a>”]:</p>
+<p>According to VIP plot, this variable is 10/12th place for importance. There also seems to be a pattern for how importance is measured. Reading the following article [6] describes how importance is calculated:</p>
 <p>“For classification problems, an area under the ROC curve (AUC) statistic can be used to quantify predictor importance.
 The AUC statistic is computed by using the predictor x as input to the ROC curve. If x can reasonably
 separate the classes of Y, that is a clear indicator that x is an important predictor (in terms of class
@@ -349,7 +348,7 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 ## 11  region_Kilimanjaro -0.04818027 -0.37948085  0.060506902 -0.12153959
 ## 12        region_Mbeya  0.07990353  0.19458539  0.008310275 -0.26606545
 ## 13     region_Morogoro  0.16192694  0.06070716 -0.109406661  0.25655965</code></pre>
-<p>Looking at PC1 we can see that the variables that take on large and positive values are longitude and region area in square miles, and large negative value is shown for latitude. According to [<a href="https://journeynorth.org/tm/LongitudeIntro.html" class="uri">https://journeynorth.org/tm/LongitudeIntro.html</a>], positive longitudinal values indicate more eastern locations and negative latitudinal values indicate more southern locations.</p>
+<p>Looking at PC1 we can see that the variables that take on large and positive values are longitude and region area in square miles, and large negative value is shown for latitude. According to [7], positive longitudinal values indicate more eastern locations and negative latitudinal values indicate more southern locations.</p>
 <p>Let’s look at the target variable distribution for this variable.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>Not much separation is happening here either but looking at the functional group peaks we can see that functional wells tend to be clustered in more southern and eastern regions of Tanzania. This variable is the second most important variable in the variable of importance plot.</p>
@@ -415,4 +414,16 @@ separation) and this is captured in the corresponding AUC statistic.”</p>
 <li><p>Try a new model that includes only the top 6 predictors in the variable of importance plot.</p></li>
 </ul>
 </div>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<ul>
+<li><p>[1] “Tanzania’s Water Crisis - Tanzania’s Water in 2021.” Water.org, water.org/our-impact/where-we-work/tanzania/.</p></li>
+<li><p>[2] DrivenData. “Pump It Up: Data Mining the Water Table.” DrivenData, www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/.</p></li>
+<li><p>[3] “2012_Census_General_Report.pdf” National Bureau of Statistics Ministry of Finance Dar Es Salaam , Mar. 2013.</p></li>
+<li><p>[4] Landis, J. Richard, and Gary G. Koch. “The Measurement of Observer Agreement for Categorical Data.” Biometrics, vol. 33, no. 1, 1977, pp. 159–174., <a href="doi:10.2307/2529310" class="uri">doi:10.2307/2529310</a>.</p></li>
+<li><p>[5] Saraswat, Manish. “Beginners Tutorial on Xgboost and Parameter Tuning in R Tutorials &amp; NOTES: Machine Learning.” HackerEarth, www.hackerearth.com/practice/machine-learning/machine-learning-algorithms/beginners-tutorial-on-xgboost-parameter-tuning-r/tutorial/.</p></li>
+<li><p>[6] Greenwell, Brandon,M., and Bradley,C. Boehmke. “Variable Importance Plots—an Introduction to the Vip Package.” The R Journal, vol. 12, no. 1, 2020, <a href="doi:10.32614/rj-2020-013" class="uri">doi:10.32614/rj-2020-013</a>.</p></li>
+<li><p>[7] “Understanding Latitude and Longitude.” Understanding Latitude and Longitude, University of Wisconsin-Madison, journeynorth.org/tm/LongitudeIntro.html.</p></li>
+</ul>
 </div>
