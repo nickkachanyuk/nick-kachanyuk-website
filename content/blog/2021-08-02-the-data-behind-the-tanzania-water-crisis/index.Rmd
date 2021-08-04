@@ -416,7 +416,11 @@ The trained model includes 12 predictors. After exploring the predictors via dat
 
 * permit_unknown
 
-Looking at the 6 remaining predictors, the following conclusions can be made:  
+Looking at the 6 remaining predictors, the following conclusions can be made:
+
+* Functional wells have more water available to waterpoint than FNR and/or non-functional wells.
+
+* Non-functional wells experience larger strain than functional and/or FNR wells.
 
 * Functional and functional need repair wells usually do not rely on handpump extraction methods and/or these wells are usually not shallow wells.
 
