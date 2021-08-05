@@ -79,7 +79,7 @@ Let's examine some visualizations!
 
 ### Baseline model
 
-```{r}
+```{r, warning=FALSE}
 tanzania1 <- read_csv('final_train.csv') %>% select(-X1)
 
 tanzania1$status_group <- as.factor(tanzania1$status_group)
@@ -104,7 +104,7 @@ The 12 features that were used in the baseline model are shown above.
 
 ### Model 4 (binary classification with 6 predictors)
 
-```{r}
+```{r, warning=FALSE}
 tanzania2 <- read_csv('final_train.csv') %>% select(-X1)
 
 tanzania2$status_group <- as.factor(tanzania1$status_group)
