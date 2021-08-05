@@ -89,7 +89,68 @@ description: Description for the page
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The target classes are more balanced and concise compared to the baseline model target classes.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>The order of importance for the top 6 variables for the new model did not change when compared with the baseline model. However, the magnitude of importance did change.</p>
+<p>The order of importance for the top 6 variables for the new model did not change when compared with the baseline model. However, the magnitude of importance did change for some of the variable.</p>
+<p>Let’s compare how the target variable is distributed among the 6 predictors for the baseline model 1 and the new model 4.</p>
 </div>
 </div>
+<div id="target-variable-distribution-for-the-top-6-predictors" class="section level2">
+<h2>Target variable distribution for the top 6 predictors</h2>
+<div id="other-extraction-from-rivers-likes" class="section level3">
+<h3>Other extraction from rivers likes</h3>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>With model 4 graph we can see a slightly better picture: functional wells are less likely to use “other” extraction methods and rely less on water sources that come from rivers and/or lakes. Wells that need attention are more uniformly distributed for this principal component variable.</p>
+</div>
+<div id="medium-to-large-sized-southern-and-eastern-regions-principal-component-variable" class="section level3">
+<h3>Medium to large sized, southern and eastern regions principal component variable</h3>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>With model 4 graph we can see that functional wells tend to be located in medium to larger sized regions, and regions that are located in more eastern and/or southern parts of Tanzania.</p>
+</div>
+<div id="small-to-medium-sized-northern-and-western-regions-principal-componenet-variable" class="section level3">
+<h3>Small to medium sized, northern and western regions principal componenet variable</h3>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Examining the model 4 graph we can see that functional wells tend to be located in northern and western regions to a lesser degree than wells that need attention, although there are many wells from both groups that reside in northern and western regions.</p>
+</div>
+<div id="handpump-groundwater-shallow-well-principal-component-variable" class="section level3">
+<h3>Handpump groundwater shallow well principal component variable</h3>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>From the model 4 graph we can see that functional wells tend to rely less on handpump extraction methods and these wells are usually not shallow.</p>
+</div>
+<div id="amount-tsh-variable" class="section level3">
+<h3>Amount tsh variable</h3>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Looking at model 4 graph, we can see that functional wells will indeed have more water available to waterpoint than wells that need attention.</p>
+</div>
+<div id="well-strain" class="section level3">
+<h3>Well strain</h3>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Model 4 graph shows that functional wells will experience less well strain than wells that need attention.</p>
+</div>
+</div>
+</div>
+<div id="recommendations" class="section level1">
+<h1>Recommendations</h1>
+<p>In this blog post we examined quite a few things about the data on the Tanzania’s well quality. With the results above, I make the following suggestions and observations:</p>
+<ul>
+<li><p>Use model 4 (or a similar model) that uses 2 classes for the target variable and 6 predictors. As we saw, the model accuracy metrics are comparable and interpretation of the model results is more manageable compared to the baseline model.</p></li>
+<li><p>Functional wells:</p>
+<ul>
+<li>Tend to not rely handpump or “other” extraction methods compared to wells that need attention</li>
+<li>Tend to be located more in southern and eastern regions of Tanzania</li>
+<li>Have more water volume available within the well/waterpoint</li>
+<li>Experience less well strain</li>
+</ul></li>
+<li><p>Needs attention wells:</p>
+<ul>
+<li>Rely more on handpump or “other” extraction methods compared to functional wells</li>
+<li>Tend to be located more in northern and western regions of Tanzania</li>
+<li>Have less water volume available within the well/waterpoint</li>
+<li>Experience higher well strain</li>
+</ul></li>
+</ul>
 </div>

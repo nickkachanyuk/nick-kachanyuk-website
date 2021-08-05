@@ -127,4 +127,102 @@ load("xgb_model4.Rdata")
 vip(xgb_model4, num_features = 6, geom = "col", aesthetics = list(fill = "bisque1", size = 0.5, color = "mistyrose3")) + theme_bw() + xlab(label = "Feature name")
 ```
 
-The order of importance for the top 6 variables for the new model did not change when compared with the baseline model. However, the magnitude of importance did change.
+The order of importance for the top 6 variables for the new model did not change when compared with the baseline model. However, the magnitude of importance did change for some of the variable.
+
+Let's compare how the target variable is distributed among the 6 predictors for the baseline model 1 and the new model 4.
+
+## Target variable distribution for the top 6 predictors
+
+### Other extraction from rivers likes
+
+```{r}
+tanzania1 %>% ggplot(., aes(other_extraction_from_rivers_lakes)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "other extraction from rivers and lakes principal component", title = "Baseline model (3 target classes; 12 predictors)")
+```
+
+```{r}
+tanzania2 %>% ggplot(., aes(other_extraction_from_rivers_lakes)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "other extraction from rivers and lakes principal component", title = "Model 4 (2 target classes; 6 predictors)")
+```
+
+With model 4 graph we can see a slightly better picture: functional wells are less likely to use "other" extraction methods and rely less on water sources that come from rivers and/or lakes. Wells that need attention are more uniformly distributed for this principal component variable.
+
+### Medium to large sized, southern and eastern regions principal component variable
+
+```{r}
+tanzania1 %>% ggplot(., aes(med_lg_SE_region)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "medium to large sized, southern and eastern regions principal component", title = "Baseline model (3 target classes; 12 predictors)")
+```
+
+```{r}
+tanzania2 %>% ggplot(., aes(med_lg_SE_region)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "medium to large sized, southern and eastern regions principal component", title = "Model 4 (2 target classes; 6 predictors)")
+```
+
+With model 4 graph we can see that functional wells tend to be located in medium to larger sized regions, and regions that are located in more eastern and/or southern parts of Tanzania.
+
+### Small to medium sized, northern and western regions principal componenet variable
+
+```{r}
+tanzania1 %>% ggplot(., aes(small_med_NW_regions)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "small to medium sized, northern and western regions principal component", title = "Baseline model (3 target classes; 12 predictors)")
+```
+
+```{r}
+tanzania2 %>% ggplot(., aes(small_med_NW_regions)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "small to medium sized, northern and western regions principal component", title = "Model 4 (2 target classes; 6 predictors)")
+```
+
+Examining the model 4 graph we can see that functional wells tend to be located in northern and western regions to a lesser degree than wells that need attention, although there are many wells from both groups that reside in northern and western regions.
+
+### Handpump groundwater shallow well principal component variable
+
+```{r}
+tanzania1 %>% ggplot(., aes(handpump_groundwater_shallow_wells)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "handpump groundwater shallow wells principal component", title = "Baseline model (3 target classes; 12 predictors)")
+```
+
+```{r}
+tanzania2 %>% ggplot(., aes(handpump_groundwater_shallow_wells)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "handpump groundwater shallow wells principal component", title = "Model 4 (2 target classes; 6 predictors)")
+```
+
+From the model 4 graph we can see that functional wells tend to rely less on handpump extraction methods and these wells are usually not shallow.
+
+### Amount tsh variable
+
+```{r}
+tanzania1 %>% ggplot(., aes(amount_tsh)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + 
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "amount tsh", title = "Baseline model (3 target classes; 12 predictors)")
+```
+
+```{r}
+tanzania2 %>% ggplot(., aes(amount_tsh)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + 
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "amount tsh", title = "Model 4 (2 target classes; 6 predictors)")
+```
+
+Looking at model 4 graph, we can see that functional wells will indeed have more water available to waterpoint than wells that need attention. 
+
+### Well strain
+
+```{r}
+tanzania1 %>% ggplot(., aes(well_strain)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + 
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "well strain", title = "Baseline model (3 target classes; 12 predictors)")
+```
+
+```{r}
+tanzania2 %>% ggplot(., aes(well_strain)) + geom_boxplot(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + 
+  scale_y_discrete(labels = NULL, breaks = NULL) + labs(x = "well strain", title = "Model 4 (2 target classes; 6 predictors)")
+```
+
+Model 4 graph shows that functional wells will experience less well strain than wells that need attention.
+
+# Recommendations 
+
+In this blog post we examined quite a few things about the data on the Tanzania's well quality. With the results above, I make the following suggestions and observations:  
+
+* Use model 4 (or a similar model) that uses 2 classes for the target variable and 6 predictors. As we saw, the model accuracy metrics are comparable and interpretation of the model results is more manageable compared to the baseline model.  
+
+* Functional wells:  
+  + Tend to not rely handpump or "other" extraction methods compared to wells that need attention
+  + Tend to be located more in southern and eastern regions of Tanzania
+  + Have more water volume available within the well/waterpoint
+  + Experience less well strain
+  
+* Needs attention wells:
+  + Rely more on handpump or "other" extraction methods compared to functional wells
+  + Tend to be located more in northern and western regions of Tanzania
+  + Have less water volume available within the well/waterpoint
+  + Experience higher well strain 
