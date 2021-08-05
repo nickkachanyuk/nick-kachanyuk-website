@@ -48,7 +48,7 @@ description: Description for the page
 </div>
 <div id="what-types-of-features-were-considered" class="section level2">
 <h2>What types of features were considered?</h2>
-<p>The features and their descriptions from the Pump it Up data can be found here: [<a href="https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/" class="uri">https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/</a>]</p>
+<p>The features and their descriptions from the Pump it Up data can be found here: [<a href="http://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/" class="uri">http://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/25/</a>]</p>
 <p>The features from the Tanzania 2012 census are:</p>
 <ul>
 <li><p>total_region_pop: total population for a given Tanzanian region</p></li>
@@ -65,7 +65,7 @@ description: Description for the page
 <h2>Dealing with missing data</h2>
 <p>Here is a plot of the missing data:</p>
 <p><img src="images/missing_data.png" height="500" /></p>
-<p>The data appears to not be missing at random because if we look at installer and funder variables, there is a 100% match in the rows where the data is missing. In addition, there were 4 regions in which all the observations had a zero value for amount_tsh variable. An imputation strategy is needed because we can not simply delete the rows where the data is missing because the data is not missing at random. I will not elaborate too much on this in this post, because it is a whole process of its own, but the code for this entire project can be found in my GitHub repository [<a href="https://github.com/nickkachanyuk/tanzania_project" class="uri">https://github.com/nickkachanyuk/tanzania_project</a>].</p>
+<p>The data appears to not be missing at random because if we look at installer and funder variables, there is a 100% match in the rows where the data is missing. In addition, there were 4 regions in which all the observations had a zero value for amount_tsh variable. An imputation strategy is needed because we can not simply delete the rows where the data is missing because the data is not missing at random. I will not elaborate too much on this in this post, because it is a whole process of its own, but the code for this entire project can be found in my GitHub repository [<a href="https://github.com/nickkachanyuk/tanzania_project_files" class="uri">https://github.com/nickkachanyuk/tanzania_project_files</a>].</p>
 <p>Looking at the missing values graph we can exclude variables like scheme_name, scheme_management, installer, and funder from further analysis. The wpt_name is a unique identifying name value for each observation and can also be excluded from the analysis.</p>
 </div>
 <div id="target-variable-class-imbalance-or-unnecessary-classes-present" class="section level2">
