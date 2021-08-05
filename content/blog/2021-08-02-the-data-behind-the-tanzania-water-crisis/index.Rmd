@@ -185,7 +185,7 @@ confusionMatrix(predict(xgb_model, test_data),factor(test_data$status_group))
 
 The model classifies functional wells better than any other target class. It seems to struggle with classifying FNR wells and does a mediocre job at classifying non-functional wells. Collapsing FNR and non-functional class may seem like a good suggestion for further analysis considerations. 
 
-The Kappa value of 0.599 shows that this is a good classifier after all and it seems like there is no apparent overfitting.
+The Kappa value of 0.60 shows that this is a good classifier after all and it seems like there is no apparent overfitting.
 
 ## Examining the improtance of features in the model and feature characterstics (distribution, suggestions, flaws, etc...)
 
@@ -424,7 +424,7 @@ Looking at the 6 remaining predictors, the following conclusions can be made:
 
 * Functional and functional need repair wells usually do not rely on handpump extraction methods and/or these wells are usually not shallow wells.
 
-* Functional wells tend to use "other" extraction methods and/or the water source for these wells comes from either rivers or lakes.
+* Functional need repair wells tend to use "other" extraction methods and/or the water source for these wells comes from either rivers or lakes.
 
 * In general, functional wells are more present in the southern and/or eastern parts of Tanzania.
 

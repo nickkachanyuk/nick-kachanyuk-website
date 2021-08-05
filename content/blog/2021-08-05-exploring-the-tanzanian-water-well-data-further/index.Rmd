@@ -1,0 +1,130 @@
+---
+title: "Exploring the Tanzanian Water Well Data Further"
+author: "Nick Kachanyuk"
+date: '2021-08-05'
+slug: []
+categories: R
+tags:
+- R
+- data science
+meta_img: images/image.png
+description: Description for the page
+---
+
+![](images/sunset.png){width=250px, height=500px}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, message = F)
+```
+
+```{r}
+library(xgboost)
+library(caret)
+library(dplyr)
+library(DiagrammeR)
+library(tidyverse)
+```
+
+# Introduction
+
+Data science is a data-driven process that is iterative in nature. We explore the data, clean the data, make visualizations, build models, and repeat the process until our questions are answered. 
+
+In my previous blog post, "The Data Behind the Tanzanian Water Crisis", I made suggestions about improving the data quality for further research. I will briefly go over what these suggestions were and my reasoning:  
+
+* Convert the target variable from a multiclass to a binary classification problem to address class imbalance and lack of variance between FNR and non-functional classes.  
+  + The original data has imbalanced target classes. This is problematic because machine learning algorithms can become "fixed" on the most frequent class and make assumptions about the data based on that class more than the other classes. This can lead to decreased predictive model performance.  
+  + For the Tanzanian data specifically, there are 3 target classes (functional, functional needs repair, and non-functional). After examining the data visualizations, I realized that there isn't much difference between functional needs repair (FNR) and non-functional target classes. It made sense to combine these two into a new class called "needs attention". My logic was that if a well needs repairs it is likely to become non-functional in the near future. This preventative approach is useful because it may help reduce costs of repair (easier to repair functional than completely broken wells) and can help reduce the burden on the people relying on the well to provide them with water.  
+  
+* Reduce the number of predictors in the model from 12 to 6.  
+  + A model that has less independent variables (predictors) but similar accuracy to a model that has more predictors is often desired.  
+  + Interpreting results becomes easier when a smaller selection of predictors needs to be considered.
+
+# The Approach
+
+In the previous blog post I built an XGBoost model that predicted the three target classes (functional, functional need repair, and non-functional) with 0.79 accuracy and 0.60 kappa. These values indicate that the model did a good job in predicting the target classes but there was an opportunity to improve the models further.
+
+In addition to the baseline model from the previous blog post, I created three additional models. Below is a description of all 4 models:  
+
+* model 1 (baseline model):  
+  + accuracy: 0.79
+  + kappa: 0.60
+  + 3 target classes: functional, functional need repair, non-functional
+  + 12 predictors
+  
+* model 2:  
+  + accuracy: 0.79
+  + kappa: 0.54
+  + 3 target classes: functional, functional need repair, non-functional
+  + 6 predictors
+  
+* model 3: 
+  + accuracy: 0.80
+  + kappa: 0.60
+  + 2 target classes: functional, needs attention
+  + 12 predictors
+  
+* model 4:
+  + accuracy: 0.80
+  + kappa: 0.60
+  + 2 target classes: functional, needs attention
+  + 6 predictors
+  
+As we can see there is not much difference in the performance of these models and any of these 4 models can be a good candidate. However, for the purpose of this exercise, I will compare the baseline model 1 with model 4. Compared to the baseline model, model 4 performs well considering that only the top 6 out of 12 predictors were used in model 4.
+
+Let's examine some visualizations!
+
+# The Tale of Two Models
+
+## Target variable histograms and variable of importance plots
+
+### Baseline model
+
+```{r}
+tanzania1 <- read_csv('final_train.csv') %>% select(-X1)
+
+tanzania1$status_group <- as.factor(tanzania1$status_group)
+```
+
+
+```{r}
+tanzania1 %>% ggplot(., aes(status_group)) + geom_bar() + theme_bw()
+```
+
+Once again we can see the class imbalance, especially for the functional needs repair target class. 
+
+```{r}
+library(vip)
+
+load("xgb_model.Rdata")
+
+vip(xgb_model, num_features = 12, geom = "col", aesthetics = list(fill = "bisque1", size = 0.5, color = "mistyrose3")) + theme_bw() + xlab(label = "Feature name")
+```
+
+The 12 features that were used in the baseline model are shown above.
+
+### Model 4 (binary classification with 6 predictors)
+
+```{r}
+tanzania2 <- read_csv('final_train.csv') %>% select(-X1)
+
+tanzania2$status_group <- as.factor(tanzania1$status_group)
+
+tanzania2$status_group <- fct_collapse(tanzania2$status_group, functional = c("functional"),  needs_attention = c("functional needs repair", "non functional"))
+
+tanzania2 <- tanzania2 %>% select(other_extraction_from_rivers_lakes, med_lg_SE_region, small_med_NW_regions, handpump_groundwater_shallow_wells, amount_tsh, well_strain, status_group)
+```
+
+
+```{r}
+tanzania2 %>% ggplot(., aes(status_group)) + geom_bar() + theme_bw()
+```
+
+The target classes are more balanced and concise compared to the baseline model target classes.
+
+```{r}
+load("xgb_model4.Rdata")
+
+vip(xgb_model4, num_features = 6, geom = "col", aesthetics = list(fill = "bisque1", size = 0.5, color = "mistyrose3")) + theme_bw() + xlab(label = "Feature name")
+```
+
+The order of importance for the top 6 variables for the new model did not change when compared with the baseline model. However, the magnitude of importance did change.
