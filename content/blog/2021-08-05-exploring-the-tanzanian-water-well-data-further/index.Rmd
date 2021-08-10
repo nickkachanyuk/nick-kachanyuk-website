@@ -133,7 +133,7 @@ Let's compare how the target variable is distributed among the 6 predictors for 
 
 ## Target variable distribution for the top 6 predictors
 
-### Other extraction from rivers likes
+### Other extraction from rivers, lakes principal componenet variable
 
 ```{r}
 tanzania1 %>% ggplot(., aes(other_extraction_from_rivers_lakes)) + geom_density(aes(fill = status_group)) + facet_grid(status_group ~.) + theme_bw() + labs(x = "other extraction from rivers and lakes principal component", title = "Baseline model (3 target classes; 12 predictors)")
